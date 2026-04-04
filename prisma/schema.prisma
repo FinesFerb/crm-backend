@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id    Int     @id @default(autoincrement())
+  name  String?
+  email String  @unique
+  password String 
+}
+
+model Customer {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  deals      Deal[]
+  avatar     String   @default("https://fra.cloud.appwrite.io/v1/storage/buckets/699948d000281057c5ba/files/69adaf54002c5a0c8b55/view?project=69993d9400180c03422f&mode=admin")
+  fromSource String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Deal {
+  id         Int       @id @default(autoincrement())
+  name       String
+  price      Int
+  status     Status    @default(TODO)
+  comments   Comment[]
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  customerId Int
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  text      String
+  deal      Deal     @relation(fields: [dealId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  dealId    Int
+}
+
+enum Status {
+  TODO
+  TO_BE_AGREED
+  IN_PROGRESS
+  PRODUCED
+  DONE
+}
