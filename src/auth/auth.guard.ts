@@ -25,7 +25,25 @@ export class AuthGuard implements CanActivate {
       // 💡 See this condition
       return true;
     }
+
     const request = context.switchToHttp().getRequest<Request>();
+
+    // Реализация для Cookie
+    const tokenCookie = request.cookies['access_token'] as string;
+    if (tokenCookie?.length !== 0) {
+      try {
+        const payloadCookie = await this.jwtService.verifyAsync<{
+          email: string;
+          name: string;
+        }>(tokenCookie);
+        request['user'] = payloadCookie;
+      } catch {
+        throw new UnauthorizedException();
+      }
+      return true;
+    }
+
+    // Реализация для Bearer token
     const token = this.extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
@@ -34,8 +52,8 @@ export class AuthGuard implements CanActivate {
       // 💡 Here the JWT secret key that's used for verifying the payload
       // is the key that was passed in the JwtModule
       const payload = await this.jwtService.verifyAsync<{
-        sub: number;
         email: string;
+        name: string;
       }>(token);
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
