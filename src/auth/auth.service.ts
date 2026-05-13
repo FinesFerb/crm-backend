@@ -23,7 +23,7 @@ export class AuthService {
     if (!(await bcrypt.compare(pass, user.password))) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.id, email: user.email };
+    const payload = { email: user.email, name: user.name };
     return {
       // 💡 Here the JWT secret key that's used for signing the payload
       // is the key that was passed in the JwtModule
@@ -41,11 +41,12 @@ export class AuthService {
 
     const saltOrRounds = 10;
     data.password = await bcrypt.hash(data.password, saltOrRounds);
-    const { id, email } = await this.userService.create(data);
+    const { email, name } = await this.userService.create(data);
+    const payload = { email: email, name: name };
     return {
       // 💡 Here the JWT secret key that's used for signing the payload
       // is the key that was passed in the JwtModule
-      access_token: await this.jwtService.signAsync({ id, email }),
+      access_token: await this.jwtService.signAsync(payload),
     };
   }
 }
