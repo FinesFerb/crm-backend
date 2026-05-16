@@ -1,4 +1,11 @@
-export class CreateDealDto {
+import { Status } from 'src/generated/prisma/enums';
+
+export interface CreateDealDto {
   name: string;
-  prrice: number;
+  price: number;
+  status: Status;
+  customer: {
+    email: string;
+    name: string;
+  };
 }
