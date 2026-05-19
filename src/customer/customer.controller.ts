@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import { Prisma } from 'src/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
 
 @Controller('customer')
 export class CustomerController {

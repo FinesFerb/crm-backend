@@ -1,4 +1,4 @@
-import { Deal } from 'src/deal/entities/deal.entity';
+import { Deal } from '@/deal/entities/deal.entity';
 
 export class CreateCustomerDto {
   email: string;
