@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Prisma } from 'src/generated/prisma/client';
-import { Public } from 'src/public/public.decorator';
+import { Prisma } from '@/generated/prisma/client';
+import { Public } from '@/public/public.decorator';
 
 @Controller('user')
 export class UserController {
