@@ -7,7 +7,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { IS_PUBLIC_KEY } from 'src/public/public.decorator';
+import { IS_PUBLIC_KEY } from '@/public/public.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
 
     // Реализация для Cookie
     const tokenCookie = request.cookies['access_token'] as string;
-    if (tokenCookie?.length !== 0) {
+    if (tokenCookie) {
       try {
         const payloadCookie = await this.jwtService.verifyAsync<{
           email: string;
