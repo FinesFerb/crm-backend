@@ -1,4 +1,4 @@
-import { Status } from 'src/generated/prisma/enums';
+import { Status } from '@/generated/prisma/enums';
 
 export interface CreateDealDto {
   name: string;

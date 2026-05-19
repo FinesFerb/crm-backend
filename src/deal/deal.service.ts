@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from 'src/generated/prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@/generated/prisma/client';
+import { PrismaService } from '@/prisma/prisma.service';
 import { Deal } from './entities/deal.entity';
 
 @Injectable()
@@ -8,9 +8,7 @@ export class DealService {
   constructor(private prisma: PrismaService) {}
 
   create(data: Prisma.DealCreateInput) {
-    return this.prisma.deal.create({
-      data,
-    });
+    return this.prisma.deal.create({ data });
   }
 
   findAll(params: {
@@ -27,6 +25,9 @@ export class DealService {
       cursor,
       where,
       orderBy,
+      include: {
+        customer: true,
+      },
     });
   }
 

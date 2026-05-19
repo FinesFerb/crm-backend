@@ -8,15 +8,27 @@ import {
   Delete,
 } from '@nestjs/common';
 import { DealService } from './deal.service';
-import { Prisma } from 'src/generated/prisma/client';
+import { Prisma } from '@/generated/prisma/client';
+import type { CreateDealDto } from './dto/create-deal.dto';
 
 @Controller('deal')
 export class DealController {
   constructor(private readonly dealService: DealService) {}
 
   @Post()
-  create(@Body() createDealDto: Prisma.DealCreateInput) {
-    return this.dealService.create(createDealDto);
+  create(@Body() createDealDto: CreateDealDto) {
+    const { name, price, status, customer } = createDealDto;
+    return this.dealService.create({
+      name,
+      price,
+      status,
+      customer: {
+        connectOrCreate: {
+          where: { email: customer.email },
+          create: { name: customer.name, email: customer.email },
+        },
+      },
+    });
   }
 
   @Get()
