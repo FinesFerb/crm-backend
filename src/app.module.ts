@@ -7,6 +7,8 @@ import { CustomerModule } from './customer/customer.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
+import { CommentModule } from './comment/comment.module';
+import { StorageModule } from './storage/storage.module';
 
 @Global()
 @Module({
@@ -16,6 +18,8 @@ import { PrismaService } from './prisma/prisma.service';
     CustomerModule,
     ConfigModule.forRoot(),
     AuthModule,
+    CommentModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
