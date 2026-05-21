@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaService } from './prisma/prisma.service';
 import { CommentModule } from './comment/comment.module';
 import { StorageModule } from './storage/storage.module';
+import { AuthGuard } from './auth/auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Global()
 @Module({
@@ -22,7 +24,14 @@ import { StorageModule } from './storage/storage.module';
     StorageModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    AppService,
+    PrismaService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
   exports: [PrismaService],
 })
 export class AppModule {}
