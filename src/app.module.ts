@@ -1,6 +1,4 @@
 import { Global, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { DealModule } from './deal/deal.module';
 import { CustomerModule } from './customer/customer.module';
@@ -23,9 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
     CommentModule,
     StorageModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     PrismaService,
     {
       provide: APP_GUARD,
