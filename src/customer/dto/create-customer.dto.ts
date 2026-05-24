@@ -1,9 +1,15 @@
-import { Deal } from '@/deal/entities/deal.entity';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCustomerDto {
-  email: string;
-  name: string;
-  avatar: string | undefined;
-  from_source: string | undefined | null;
-  deals: Deal[] | undefined;
+  @IsEmail()
+  email!: string;
+
+  @IsNotEmpty()
+  name!: string;
+
+  @IsString()
+  avatar?: string;
+
+  @IsString()
+  fromSource?: string;
 }

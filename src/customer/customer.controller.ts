@@ -1,47 +1,37 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
-  Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import { Prisma } from '@/generated/prisma/client';
+import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { Customer } from '@/generated/prisma/client';
 
 @Controller('customer')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
-  @Post()
-  create(@Body() createCustomerDto: Prisma.CustomerCreateInput) {
-    return this.customerService.create(createCustomerDto);
-  }
-
   @Get()
-  findAll() {
-    return this.customerService.findAll({});
+  findAll(): Promise<Customer[]> {
+    return this.customerService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customerService.findOne({ id: Number(id) });
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<Customer | null> {
+    return this.customerService.findOne({ id });
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
-    @Body() updateCustomerDto: Prisma.CustomerCreateInput,
-  ) {
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateCustomerDto: UpdateCustomerDto,
+  ): Promise<Customer> {
     return this.customerService.update({
-      where: { id: +id },
+      where: { id },
       data: updateCustomerDto,
     });
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.customerService.remove({ id: +id });
   }
 }
