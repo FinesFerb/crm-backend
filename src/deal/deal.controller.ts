@@ -5,11 +5,11 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { DealService } from './deal.service';
-import { Prisma } from '@/generated/prisma/client';
-import type { CreateDealDto } from './dto/create-deal.dto';
+import { CreateDealDto } from './dto/create-deal.dto';
+import { UpdateDealDto } from './dto/update-deal.dto';
 
 @Controller('deal')
 export class DealController {
@@ -33,27 +33,17 @@ export class DealController {
 
   @Get()
   findAll() {
-    return this.dealService.findAll({});
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.dealService.findOne({ id: Number(id) });
+    return this.dealService.findAll();
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
-    @Body() updateDealDto: Prisma.DealUpdateInput,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateDealDto: UpdateDealDto,
   ) {
     return this.dealService.update({
-      where: { id: Number(id) },
+      where: { id },
       data: updateDealDto,
     });
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.dealService.remove({ id: Number(id) });
   }
 }

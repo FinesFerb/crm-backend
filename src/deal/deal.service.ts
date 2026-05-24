@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@/generated/prisma/client';
+import { Deal, Prisma } from '@/generated/prisma/client';
 import { PrismaService } from '@/prisma/prisma.service';
-import { Deal } from './entities/deal.entity';
 
 @Injectable()
 export class DealService {
@@ -11,29 +10,11 @@ export class DealService {
     return this.prisma.deal.create({ data });
   }
 
-  findAll(params: {
-    skip?: number;
-    take?: number;
-    cursor?: Prisma.DealWhereUniqueInput;
-    where?: Prisma.DealWhereInput;
-    orderBy?: Prisma.DealOrderByWithRelationInput;
-  }): Promise<Deal[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+  findAll(): Promise<Deal[]> {
     return this.prisma.deal.findMany({
-      skip,
-      take,
-      cursor,
-      where,
-      orderBy,
       include: {
         customer: true,
       },
-    });
-  }
-
-  findOne(where: Prisma.DealWhereUniqueInput): Promise<Deal | null> {
-    return this.prisma.deal.findUnique({
-      where,
     });
   }
 
@@ -45,12 +26,6 @@ export class DealService {
     return this.prisma.deal.update({
       where,
       data,
-    });
-  }
-
-  remove(where: Prisma.DealWhereUniqueInput): Promise<Deal> {
-    return this.prisma.deal.delete({
-      where,
     });
   }
 }
