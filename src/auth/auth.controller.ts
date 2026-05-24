@@ -9,9 +9,11 @@ import {
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Prisma } from '@/generated/prisma/client';
 import { Public } from '@/public/public.decorator';
 import type { Request, Response } from 'express';
+import { SignInUserDto } from './dto/sign-in-user.dto';
+import { SignUpUserDto } from './dto/sign-up-user.dto';
+import { PayloadUserDto } from './dto/payload-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -22,20 +24,16 @@ export class AuthController {
   @Post('login')
   async signIn(
     @Res({ passthrough: true }) res: Response,
-    @Body() signInDto: Record<string, string>,
+    @Body() signInDto: SignInUserDto,
   ) {
-    const { access_token } = await this.authService.signIn(
-      signInDto.email,
-      signInDto.password,
-    );
-
+    const { access_token, userName } = await this.authService.signIn(signInDto);
     res.cookie('access_token', access_token, {
       httpOnly: true,
       sameSite: 'strict',
     });
     return {
       email: signInDto.email,
-      name: signInDto.name,
+      name: userName,
       status: access_token !== '',
     };
   }
@@ -45,7 +43,7 @@ export class AuthController {
   @Post('register')
   async signUp(
     @Res({ passthrough: true }) res: Response,
-    @Body() signUpDto: Prisma.UserCreateInput,
+    @Body() signUpDto: SignUpUserDto,
   ) {
     const { access_token } = await this.authService.signUp(signUpDto);
     res.cookie('access_token', access_token, {
@@ -68,8 +66,9 @@ export class AuthController {
     });
   }
 
+  @HttpCode(HttpStatus.OK)
   @Get('account')
-  account(@Req() req: Request & { user?: { email: string; name: string } }) {
-    return { email: req.user?.email, name: req.user?.name, status: !!req.user };
+  account(@Req() req: Request & { user: PayloadUserDto }) {
+    return { email: req.user.email, name: req.user.name, status: !!req.user };
   }
 }
